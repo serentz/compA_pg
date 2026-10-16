@@ -1,5 +1,5 @@
 -- Base de test du cluster 1 (reference) : poc_pg. A executer en superutilisateur :
---     psql -h pg01 -p 5433 -U postgres -d postgres -f 01_create_poc_db_cluster1.sql
+--     psql -h pgdb01 -p 5433 -U postgres -d postgres -f 01_create_poc_db_cluster1.sql
 \set ON_ERROR_STOP on
 
 -- Roles (niveau cluster)
