@@ -1,0 +1,690 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Code source des vues, fonctions, procédures et triggers (comparé par hash). R1 = cluster 1 / base 1, R2 = cluster 2 / base 2.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "compa_pg"
+      ],
+      "targetBlank": false,
+      "title": "Modules",
+      "tooltip": "Aller à un autre module",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Écarts",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Nombre total d'écarts du run pour ce module"
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Seulement R1",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'ONLY_R1'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "blue",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents uniquement côté 1"
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Seulement R2",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'ONLY_R2'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "purple",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents uniquement côté 2"
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Différents",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'DIFF'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents des deux côtés, valeurs différentes"
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Dont attendus",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and attendu",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Écarts marqués attendus par exclusion_rules"
+    },
+    {
+      "id": 6,
+      "type": "table",
+      "title": "Objets en écart",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select case type_diff when 'ONLY_R1' then 'Seulement R1' when 'ONLY_R2' then 'Seulement R2' else 'Différent' end as \"Type\", object_name as \"Nom\", case object_type when 'P' then 'Procédure' when 'F' then 'Fonction' when 'V' then 'Vue' when 'M' then 'Vue matérialisée' when 'TR' then 'Trigger' else object_type end as \"Objet\", r1_nb_lignes as \"R1 lignes\", r2_nb_lignes as \"R2 lignes\", left(r1_hash, 10) as \"R1 hash\", left(r2_hash, 10) as \"R2 hash\", case when attendu then 'Oui' else '' end as \"Attendu\" from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint order by type_diff, object_type, object_name",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Type"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Seulement R1": {
+                        "color": "blue",
+                        "index": 0,
+                        "text": "Seulement R1"
+                      },
+                      "Seulement R2": {
+                        "color": "purple",
+                        "index": 1,
+                        "text": "Seulement R2"
+                      },
+                      "Différent": {
+                        "color": "orange",
+                        "index": 2,
+                        "text": "Différent"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Attendu"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Oui": {
+                        "color": "yellow",
+                        "index": 0,
+                        "text": "Oui"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "table",
+      "title": "Code source : ${objet:text}",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "with src as (select r1_source, r2_source from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and object_name = split_part(${objet:sqlstring}, '|', 1) and object_type = split_part(${objet:sqlstring}, '|', 2)), a as (select t.n, t.l from src, regexp_split_to_table(coalesce(r1_source, ''), E'\\n') with ordinality as t(l, n)), b as (select t.n, t.l from src, regexp_split_to_table(coalesce(r2_source, ''), E'\\n') with ordinality as t(l, n)) select coalesce(a.n, b.n) as \"Ligne\", a.l as \"R1\", b.l as \"R2\", case when a.l is distinct from b.l then '≠' else '' end as \"Écart\" from a full join b on a.n = b.n where ${filtre:sqlstring} = 'toutes' or a.l is distinct from b.l order by 1",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ligne"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Écart"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      },
+      "description": "Comparaison par position de ligne : une ligne insérée décale les suivantes. Choisir l'objet avec la liste « Objet » en haut."
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "compa_pg"
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "run",
+        "label": "Run",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "compa_pg_ds"
+        },
+        "description": "Run affiché : date | cluster1.base1 vs cluster2.base2",
+        "definition": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "query": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "refresh": 1,
+        "sort": 0,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "skipUrlSync": false,
+        "options": [],
+        "current": {}
+      },
+      {
+        "name": "objet",
+        "label": "Objet",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "compa_pg_ds"
+        },
+        "description": "Objet dont le code est comparé ligne à ligne (objets présents des deux côtés)",
+        "definition": "select object_name || ' (' || object_type || ')' as __text, object_name || '|' || object_type as __value from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'DIFF' order by object_name",
+        "query": "select object_name || ' (' || object_type || ')' as __text, object_name || '|' || object_type as __value from compa_pg.diff_obj_source where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'DIFF' order by object_name",
+        "refresh": 1,
+        "sort": 0,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "skipUrlSync": false,
+        "options": [],
+        "current": {}
+      },
+      {
+        "name": "filtre",
+        "label": "Lignes",
+        "type": "custom",
+        "description": "Lignes à afficher",
+        "query": "Lignes différentes : diff,Toutes les lignes : toutes",
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "skipUrlSync": false,
+        "options": [
+          {
+            "selected": true,
+            "text": "Lignes différentes",
+            "value": "diff"
+          },
+          {
+            "selected": false,
+            "text": "Toutes les lignes",
+            "value": "toutes"
+          }
+        ],
+        "current": {
+          "selected": true,
+          "text": "Lignes différentes",
+          "value": "diff"
+        }
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "browser",
+  "title": "07 - Code source",
+  "uid": "compapg-obj_source",
+  "version": 1,
+  "weekStart": ""
+}

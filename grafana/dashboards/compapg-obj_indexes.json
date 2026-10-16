@@ -1,0 +1,540 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Index : unicité, clé primaire, méthode, colonnes et prédicat (définition). R1 = cluster 1 / base 1, R2 = cluster 2 / base 2.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "compa_pg"
+      ],
+      "targetBlank": false,
+      "title": "Modules",
+      "tooltip": "Aller à un autre module",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Écarts",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Nombre total d'écarts du run pour ce module"
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Seulement R1",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'ONLY_R1'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "blue",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents uniquement côté 1"
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Seulement R2",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'ONLY_R2'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "purple",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents uniquement côté 2"
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Différents",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint and type_diff = 'DIFF'",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Présents des deux côtés, valeurs différentes"
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Dont attendus",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) as \"Écarts\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint and attendu",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "noValue": "0",
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "description": "Écarts marqués attendus par exclusion_rules"
+    },
+    {
+      "id": 6,
+      "type": "table",
+      "title": "Écarts",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select case type_diff when 'ONLY_R1' then 'Seulement R1' when 'ONLY_R2' then 'Seulement R2' else 'Différent' end as \"Type\", table_name as \"Table\", index_name as \"Index\", r1_is_unique as \"R1 unique\", r1_is_primary as \"R1 primaire\", r1_definition as \"R1 définition\", r2_is_unique as \"R2 unique\", r2_is_primary as \"R2 primaire\", r2_definition as \"R2 définition\", case when type_diff = 'DIFF' then nullif(concat_ws(', ', case when r1_is_unique is distinct from r2_is_unique then 'is_unique' end, case when r1_is_primary is distinct from r2_is_primary then 'is_primary' end, case when r1_definition is distinct from r2_definition then 'definition' end), '') end as \"Champs en écart\", case when attendu then 'Oui' else '' end as \"Attendu\" from compa_pg.diff_obj_indexes where run_id = nullif(${run:sqlstring}, '')::bigint order by type_diff, table_name, index_name",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Type"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Seulement R1": {
+                        "color": "blue",
+                        "index": 0,
+                        "text": "Seulement R1"
+                      },
+                      "Seulement R2": {
+                        "color": "purple",
+                        "index": 1,
+                        "text": "Seulement R2"
+                      },
+                      "Différent": {
+                        "color": "orange",
+                        "index": 2,
+                        "text": "Différent"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Attendu"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Oui": {
+                        "color": "yellow",
+                        "index": 0,
+                        "text": "Oui"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "compa_pg"
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "run",
+        "label": "Run",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "compa_pg_ds"
+        },
+        "description": "Run affiché : date | cluster1.base1 vs cluster2.base2",
+        "definition": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "query": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "refresh": 1,
+        "sort": 0,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "skipUrlSync": false,
+        "options": [],
+        "current": {}
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "browser",
+  "title": "05 - Index",
+  "uid": "compapg-obj_indexes",
+  "version": 1,
+  "weekStart": ""
+}

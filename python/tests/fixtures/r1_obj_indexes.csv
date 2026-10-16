@@ -1,0 +1,11 @@
+table_name|index_name|is_unique|is_primary|definition
+app.audit_log|audit_log_pkey|true|true|app.audit_log USING btree (id)
+app.customers|customers_pkey|true|true|app.customers USING btree (id)
+app.customers|ix_customers_name_trgm|false|false|app.customers USING gin (name public.gin_trgm_ops)
+app.customers|ux_customers_email|true|false|app.customers USING btree (email)
+app.legacy_codes|legacy_codes_pkey|true|true|app.legacy_codes USING btree (code)
+app.order_items|ix_items_sku|false|false|app.order_items USING btree (sku)
+app.order_items|order_items_pkey|true|true|app.order_items USING btree (order_id, line_no)
+app.orders|ix_orders_customer|false|false|app.orders USING btree (customer_id)
+app.orders|ix_orders_status|false|false|app.orders USING btree (status) WHERE ((status)::text <> 'CANCELLED'::text)
+app.orders|orders_pkey|true|true|app.orders USING btree (id)

@@ -1,0 +1,4 @@
+extension|version|schema
+hstore|1.8|public
+pg_trgm|1.6|public
+plpgsql|1.0|pg_catalog

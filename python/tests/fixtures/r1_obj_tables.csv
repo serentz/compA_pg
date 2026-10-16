@@ -1,0 +1,24 @@
+table_name|column_name|type_name|not_null|default_value|identity|generated
+app.audit_log|action|character(1)|true|||
+app.audit_log|at|timestamp with time zone|true|now()||
+app.audit_log|id|bigint|true||ALWAYS|
+app.audit_log|tbl|text|true|||
+app.customers|country|character(2)|true|'FR'::bpchar||
+app.customers|created_at|timestamp with time zone|true|now()||
+app.customers|email|public.citext|false|||
+app.customers|id|integer|true||ALWAYS|
+app.customers|name|character varying(100)|true|||
+app.legacy_codes|code|character varying(10)|true|||
+app.legacy_codes|label|character varying(50)|false|||
+app.order_items|line_no|smallint|true|||
+app.order_items|order_id|integer|true|||
+app.order_items|price|numeric(10,2)|true|||
+app.order_items|qty|integer|true|||
+app.order_items|sku|character varying(30)|true|||
+app.orders|comment|text|false|||
+app.orders|customer_id|integer|true|||
+app.orders|id|integer|true||BY DEFAULT|
+app.orders|invoice_no|bigint|false|nextval('app.seq_invoice'::regclass)||
+app.orders|ordered_at|timestamp without time zone|true|now()||
+app.orders|status|character varying(20)|true|'NEW'::character varying||
+app.orders|total|numeric(12,2)|true|0||

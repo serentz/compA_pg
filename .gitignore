@@ -1,0 +1,25 @@
+# Secrets et configuration locale
+.env
+*.env
+*.pgpass
+config.local.*
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Fichiers produits par l'execution
+*.log
+*.out
+*.csv
+!python/tests/fixtures/*.csv
+rapport_comparaison_*.txt
+tmp/
+
+# Editeurs et OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

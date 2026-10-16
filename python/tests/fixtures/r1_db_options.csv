@@ -1,0 +1,10 @@
+option|value
+allow_connections|true
+collate|C
+connection_limit|-1
+ctype|C
+encoding|UTF8
+is_template|false
+owner|app_owner
+setting:search_path|app, public
+tablespace|pg_default

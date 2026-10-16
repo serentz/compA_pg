@@ -1,0 +1,7 @@
+role_name|can_login|superuser|create_db|create_role|inherit|replication|bypass_rls|conn_limit|member_of
+app_owner|false|false|false|false|true|false|false|-1|
+app_ro|true|false|false|false|true|false|false|-1|
+app_rw|true|false|false|false|true|false|false|20|app_ro
+batch_user|true|false|true|false|true|false|false|-1|
+compa_app|true|true|false|false|true|false|false|-1|
+postgres|true|true|true|true|true|true|true|-1|

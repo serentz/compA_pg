@@ -1,0 +1,9 @@
+object_name|object_type
+app.audit_trg()|F
+app.customers.trg_customers_audit|TR
+app.mv_sales_by_country|M
+app.order_total(p_order integer)|F
+app.orders.trg_orders_audit|TR
+app.purge_audit(IN p_days integer)|P
+app.v_customer_totals|V
+app.v_open_orders|V

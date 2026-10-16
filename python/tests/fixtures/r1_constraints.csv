@@ -1,0 +1,10 @@
+table_name|constraint_name|constraint_type|definition
+app.audit_log|audit_log_pkey|p|PRIMARY KEY (id)
+app.customers|customers_pkey|p|PRIMARY KEY (id)
+app.legacy_codes|legacy_codes_pkey|p|PRIMARY KEY (code)
+app.order_items|order_items_order_id_fkey|f|FOREIGN KEY (order_id) REFERENCES app.orders(id) ON DELETE CASCADE
+app.order_items|order_items_pkey|p|PRIMARY KEY (order_id, line_no)
+app.order_items|order_items_qty_check|c|CHECK ((qty > 0))
+app.orders|orders_customer_id_fkey|f|FOREIGN KEY (customer_id) REFERENCES app.customers(id) ON DELETE RESTRICT
+app.orders|orders_pkey|p|PRIMARY KEY (id)
+app.orders|orders_status_check|c|CHECK (((status)::text = ANY ((ARRAY['NEW'::character varying, 'PAID'::character varying, 'SHIPPED'::character varying, 'CANCELLED'::character varying])::text[])))

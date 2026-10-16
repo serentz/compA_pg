@@ -1,0 +1,14 @@
+# Fins de ligne LF obligatoires : ces fichiers sont executes sous Linux
+# (copies par scp depuis Windows, un CRLF casse bash et les kickstart).
+*.sh   text eol=lf
+*.py   text eol=lf
+*.sql  text eol=lf
+*.tpl  text eol=lf
+*.cfg  text eol=lf
+*.rs   text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.csv  text eol=lf
+*.png  binary

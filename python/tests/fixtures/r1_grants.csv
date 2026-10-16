@@ -1,0 +1,43 @@
+object_type|object_name|grantee|privileges
+function|app.order_total(p_order integer)|app_owner|EXECUTE
+function|app.order_total(p_order integer)|app_ro|EXECUTE
+function|app.order_total(p_order integer)|app_rw|EXECUTE
+schema|app|app_owner|CREATE,USAGE
+schema|app|app_ro|USAGE
+schema|app|app_rw|USAGE
+schema|public|PUBLIC|USAGE
+schema|public|pg_database_owner|CREATE,USAGE
+sequence|app.audit_log_id_seq|app_owner|SELECT,UPDATE,USAGE
+sequence|app.audit_log_id_seq|app_rw|USAGE
+sequence|app.customers_id_seq|app_owner|SELECT,UPDATE,USAGE
+sequence|app.customers_id_seq|app_rw|USAGE
+sequence|app.orders_id_seq|app_owner|SELECT,UPDATE,USAGE
+sequence|app.orders_id_seq|app_rw|USAGE
+sequence|app.seq_batch|app_owner|SELECT,UPDATE,USAGE
+sequence|app.seq_batch|app_rw|USAGE
+sequence|app.seq_invoice|app_owner|SELECT,UPDATE,USAGE
+sequence|app.seq_invoice|app_rw|USAGE
+table|app.audit_log|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.audit_log|app_ro|SELECT
+table|app.audit_log|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.customers|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.customers|app_ro|SELECT
+table|app.customers|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.legacy_codes|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.legacy_codes|app_ro|SELECT
+table|app.legacy_codes|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.mv_sales_by_country|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.mv_sales_by_country|app_ro|SELECT
+table|app.mv_sales_by_country|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.order_items|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.order_items|app_ro|SELECT
+table|app.order_items|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.orders|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.orders|app_ro|SELECT
+table|app.orders|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.v_customer_totals|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.v_customer_totals|app_ro|SELECT
+table|app.v_customer_totals|app_rw|DELETE,INSERT,SELECT,UPDATE
+table|app.v_open_orders|app_owner|DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+table|app.v_open_orders|app_ro|SELECT
+table|app.v_open_orders|app_rw|DELETE,INSERT,SELECT,UPDATE

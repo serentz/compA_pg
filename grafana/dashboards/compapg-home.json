@@ -1,0 +1,335 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Synthèse d'un run de comparaison : écarts par module et historique.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "compa_pg"
+      ],
+      "targetBlank": false,
+      "title": "Modules",
+      "tooltip": "Aller à un autre module",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "table",
+      "title": "Run sélectionné",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select to_char(r.ts_exec at time zone 'Europe/Paris', 'YYYY-MM-DD HH24:MI:SS') as \"Date\", e.instance1 as \"Instance 1\", e.base1 as \"Base 1\", e.instance2 as \"Instance 2\", e.base2 as \"Base 2\", r.statut as \"Statut\", coalesce(r.message, '') as \"Message\" from compa_pg.run r join compa_pg.ref_execution e using (refid) where r.run_id = nullif(${run:sqlstring}, '')::bigint",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "table",
+      "title": "Écarts par module",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select m.module as \"Module\", m.libelle as \"Contrôle\", coalesce(sum(s.nb), 0)::int as \"Écarts\", coalesce(sum(s.nb) filter (where s.type_diff = 'ONLY_R1'), 0)::int as \"Seulement R1\", coalesce(sum(s.nb) filter (where s.type_diff = 'ONLY_R2'), 0)::int as \"Seulement R2\", coalesce(sum(s.nb) filter (where s.type_diff = 'DIFF'), 0)::int as \"Différents\", coalesce(sum(s.nb) filter (where s.attendu), 0)::int as \"dont attendus\" from (values (1, 'inst_config', 'Configuration du cluster'), (2, 'db_size', 'Taille de la base'), (3, 'db_options', 'Options de la base'), (4, 'obj_tables', 'Structure des tables'), (5, 'obj_indexes', 'Index'), (6, 'obj_code', 'Vues, fonctions, triggers'), (7, 'obj_source', 'Code source'), (8, 'constraints', 'Contraintes et clés étrangères'), (9, 'extensions', 'Extensions'), (10, 'sequences', 'Séquences'), (11, 'roles', 'Rôles'), (12, 'grants', 'Droits')) as m(ord, module, libelle) left join compa_pg.v_synthese_run s on s.module = m.module and s.run_id = nullif(${run:sqlstring}, '')::bigint group by m.ord, m.module, m.libelle order by m.ord",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Module"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Ouvrir ce module",
+                    "url": "/d/compapg-${__data.fields.Module}?var-run=${run}&${__url_time_range}",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Écarts"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      },
+      "description": "Cliquer sur un nom de module pour ouvrir son dashboard avec le même run."
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Historique de ce couple instance/base (20 derniers runs)",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "compa_pg_ds"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "compa_pg_ds"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select r.run_id as \"Run\", to_char(r.ts_exec at time zone 'Europe/Paris', 'YYYY-MM-DD HH24:MI:SS') as \"Date\", r.statut as \"Statut\", coalesce(sum(s.nb), 0)::int as \"Écarts\", coalesce(sum(s.nb) filter (where s.attendu), 0)::int as \"dont attendus\" from compa_pg.run r left join compa_pg.v_synthese_run s on s.run_id = r.run_id where r.refid = (select refid from compa_pg.run where run_id = nullif(${run:sqlstring}, '')::bigint) group by r.run_id, r.ts_exec, r.statut order by r.ts_exec desc, r.run_id desc limit 20",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": "text",
+      "title": "",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "### Comment lire ces dashboards\n\n- **R1** = instance 1 / base 1, **R2** = instance 2 / base 2 (voir le run en haut de page).\n- **Seulement R1** : présent uniquement côté 1. **Seulement R2** : présent uniquement côté 2. **Différent** : présent des deux côtés avec des valeurs différentes (colonne *Champs en écart*).\n- **Attendu** : écart connu, marqué par une règle de la table `compa_pg.exclusion_rules`.\n- Choisir le **Run** dans la liste en haut : il est conservé quand on change de module avec la barre de liens (sous le titre) ou en cliquant sur un module du tableau ci-dessus.\n- Les colonnes des tableaux sont filtrables et triables.\n",
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        }
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "compa_pg"
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "run",
+        "label": "Run",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "compa_pg_ds"
+        },
+        "description": "Run affiché : date | cluster1.base1 vs cluster2.base2",
+        "definition": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "query": "select run_id::text as __value, libelle as __text from compa_pg.v_run_selector where statut = 'TERMINE' order by ts_exec desc, run_id desc",
+        "refresh": 1,
+        "sort": 0,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "skipUrlSync": false,
+        "options": [],
+        "current": {}
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "browser",
+  "title": "00 - Synthèse",
+  "uid": "compapg-home",
+  "version": 1,
+  "weekStart": ""
+}

@@ -1,0 +1,21 @@
+# Datasource PostgreSQL de compA_pg (aucun secret dans ce fichier).
+# Variables lues dans l'environnement du service grafana-server :
+#   COMPA_PG_HOST, COMPA_PG_PORT, COMPA_PG_DB, COMPA_PG_PASSWORD
+# Grafana < 10.3 : remplacer le type par "postgres".
+apiVersion: 1
+datasources:
+  - name: Comparaison PostgreSQL
+    uid: compa_pg_ds
+    type: grafana-postgresql-datasource
+    access: proxy
+    url: ${COMPA_PG_HOST}:${COMPA_PG_PORT}
+    user: grafana_ro
+    isDefault: false
+    editable: false
+    jsonData:
+      database: ${COMPA_PG_DB}
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: false
+    secureJsonData:
+      password: ${COMPA_PG_PASSWORD}
