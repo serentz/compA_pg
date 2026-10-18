@@ -13,6 +13,9 @@
   Reseau, noms et dossier distincts du POC comparaison_ase : les deux POC peuvent coexister.
   Rejouable : -Destroy supprime les VM du POC pour recommencer de zero ; -Only limite a une VM.
 
+ATTENTION
+  PowerShell ouvert en administrateur. Fonctionnalite Windows "Hyper-V" requise.
+
 .PARAMETER UbuntuIso
   Chemin complet du fichier .iso d'Ubuntu Server (pas un dossier). Obligatoire sauf avec -Destroy.
 .PARAMETER VmRoot
@@ -38,15 +41,15 @@
 .PARAMETER NoConsole
   N'ouvre pas les consoles des VM pendant l'installation.
 .PARAMETER Help
-  Affiche cette aide et quitte (ne demande pas les droits administrateur). Equivalent : Get-Help .\create_vms.ps1 -Full
+  Affiche cette aide et quitte (ne demande pas les droits administrateur). Equivalent : Get-Help .\create_vms.ps1 -Detailed
 
 .EXAMPLE
   .\create_vms.ps1 -UbuntuIso "K:\ShareLinux\Image ISO\ubuntu-24.04.5-live-server-amd64.iso"
+  Cree le reseau et les 2 VM, puis installe Ubuntu sans intervention.
 
 .EXAMPLE
-  .\create_vms.ps1 -Destroy        # supprime les 2 VM et leurs disques
-
-  PowerShell ouvert en administrateur. Fonctionnalite Windows "Hyper-V" requise.
+  .\create_vms.ps1 -Destroy
+  Supprime les 2 VM et leurs disques (le reseau est conserve).
 #>
 [CmdletBinding()]
 param(
@@ -69,7 +72,7 @@ $ErrorActionPreference = 'Stop'
 
 # Aide : avant tout controle, pour fonctionner meme sans droits administrateur
 if ($Help) {
-    Get-Help -Name $PSCommandPath -Full
+    Get-Help -Name $PSCommandPath -Detailed
     return
 }
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
