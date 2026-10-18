@@ -28,7 +28,7 @@ ligne à ligne du code source.
 - **Stockage** (`sql/postgres/`) : schéma `compa_pg`, historique de tous les runs.
 - **Affichage** (`grafana/`) : 13 dashboards générés et provisionnés, navigation entre modules.
 
-Les clusters comparés et la base de résultats sont indépendants : les résultats peuvent être stockés dans un troisième cluster (cas du POC : `pg01` port 5432).
+Les clusters comparés et la base de résultats sont indépendants : les résultats peuvent être stockés dans un troisième cluster (cas du POC : `pgdb01` port 5432).
 
 ## Modules comparés (12)
 
@@ -70,7 +70,7 @@ sur les fonctions d'agrégat : elles sont exclues (`prokind in ('f','p')`).
 | `python/` | `compare.py` et `tests/` (tests automatisés, CSV réels de deux clusters de test, `make_fixtures.sh`) |
 | `sql/postgres/` | `create_schema.sql` : schéma `compa_pg` (références, runs, configuration, exclusions, 12 tables `diff_<module>`, vues Grafana) |
 | `sql/pg_test/` | Deux scripts créant la base `poc_pg` avec des écarts volontaires (cluster 1 et cluster 2) |
-| `infra/` | `pg_clusters.sh` : crée les deux clusters de test (5433/5434) sur `pg01` |
+| `infra/` | `hyperv/create_vms.ps1` : réseau et 2 VM Hyper-V (guide : `docs/installation_vm.md`) ; `pg_clusters.sh` : crée les deux clusters de test (5433/5434) sur `pgdb01` |
 | `grafana/` | 13 dashboards JSON, générateur, provisioning, tests. Voir `grafana/README.md` |
 | `docs/` | Format des CSV, liste de contrôle de première exécution |
 
@@ -86,14 +86,14 @@ psql -h <hote> -U <login> -d compa -c "ALTER ROLE grafana_ro LOGIN PASSWORD '<a_
 
 Le script est rejouable sans perte de données. `grafana_ro` (lecture seule) est créé sans mot de passe : à définir, sans le versionner. Le schéma `compa_pg` peut cohabiter avec `compa_ase` dans la même base.
 
-2. **Clusters de test** (optionnel, sur `pg01`) : `sudo bash infra/pg_clusters.sh`.
+2. **Clusters de test** (optionnel, sur `pgdb01`) : `sudo bash infra/pg_clusters.sh`.
 
 3. **Déclarer les clusters comparés** (un login par instance) :
 
 ```sql
 INSERT INTO compa_pg.config_compa_pg (instance, host, port, login, password)
-VALUES ('PGA', 'pg01', 5433, '<login>', '<mot_de_passe>'),
-       ('PGB', 'pg01', 5434, '<login>', '<mot_de_passe>');
+VALUES ('PGA', 'pgdb01', 5433, '<login>', '<mot_de_passe>'),
+       ('PGB', 'pgdb01', 5434, '<login>', '<mot_de_passe>');
 ```
 
 ## Lancer une comparaison
@@ -151,6 +151,7 @@ Les CSV de `python/tests/fixtures` sont une extraction réelle des deux clusters
 
 ## Documentation
 
+- [`docs/installation_vm.md`](docs/installation_vm.md) : création des 2 VM Hyper-V et installation de PostgreSQL, Python et Grafana
 - [`docs/format_csv.md`](docs/format_csv.md) : format des CSV produits par le script et lus par `compare.py`, règles d'exclusion
 - [`docs/premiere_execution.md`](docs/premiere_execution.md) : liste de contrôle avant une première exécution sur un nouvel environnement
 - [`grafana/README.md`](grafana/README.md) : installation et utilisation des dashboards

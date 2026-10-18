@@ -1,11 +1,11 @@
 #!/bin/bash
 # ==============================================================================
-# pg_clusters.sh - Cree les deux clusters PostgreSQL de test sur pg01 (Ubuntu/Debian)
+# pg_clusters.sh - Cree les deux clusters PostgreSQL de test sur pgdb01 (Ubuntu/Debian)
 #
 #   cluster "pga"  port 5433  : cluster 1 (reference)
 #   cluster "pgb"  port 5434  : cluster 2 (compare), work_mem different (ecart voulu)
 #
-# Usage (sur pg01, en tant qu'administrateur) :
+# Usage (sur pgdb01, en tant qu'administrateur) :
 #   sudo bash infra/pg_clusters.sh [version_pg]        # defaut : version installee (ex. 16)
 #
 # Le script :
@@ -19,7 +19,7 @@
 set -euo pipefail
 
 VER="${1:-$(ls /usr/lib/postgresql | sort -n | tail -n 1)}"
-NET="${COMPA_NET:-192.168.50.0/24}"
+NET="${COMPA_NET:-192.168.60.0/24}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 TESTSQL="$HERE/../sql/pg_test"
 

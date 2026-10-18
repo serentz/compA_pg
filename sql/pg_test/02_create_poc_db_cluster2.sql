@@ -1,6 +1,6 @@
 -- Base de test du cluster 2 (comparee) : poc_pg, avec des ecarts volontaires par rapport au cluster 1.
 -- A executer en superutilisateur :
---     psql -h pg01 -p 5434 -U postgres -d postgres -f 02_create_poc_db_cluster2.sql
+--     psql -h pgdb01 -p 5434 -U postgres -d postgres -f 02_create_poc_db_cluster2.sql
 \set ON_ERROR_STOP on
 
 -- Roles : app_ro sans login, batch_user absent, reporting_user en plus, app_rw sans limite de connexions
