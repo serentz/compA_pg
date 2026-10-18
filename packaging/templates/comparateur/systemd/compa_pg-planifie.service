@@ -1,0 +1,13 @@
+[Unit]
+Description=compA_pg : comparaisons planifiees (/etc/compa_pg/planifie.conf)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# User= est remplace a l'installation par RUN_USER (le seul a pouvoir lire /etc/compa_pg/compa_pg.env)
+User=root
+ExecStart=/usr/local/bin/compa_pg-planifie
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=compa_pg-planifie

@@ -74,6 +74,8 @@ Start-VM -Name pgdb01,pgbastion
 
 ## 6. Suite : PostgreSQL sur `pgdb01`
 
+> **Chemin court** : les archives du dossier `Deploy/` font les étapes 6 et 7 (PostgreSQL, base de résultats, clusters de test, comparateur, Grafana) : voir [deploiement_archives.md](deploiement_archives.md). Les étapes à la main ci-dessous restent valables.
+
 `ssh admin01@192.168.60.11`, puis :
 
 ```

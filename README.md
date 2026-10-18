@@ -70,9 +70,52 @@ sur les fonctions d'agrégat : elles sont exclues (`prokind in ('f','p')`).
 | `python/` | `compare.py` et `tests/` (tests automatisés, CSV réels de deux clusters de test, `make_fixtures.sh`) |
 | `sql/postgres/` | `create_schema.sql` : schéma `compa_pg` (références, runs, configuration, exclusions, 12 tables `diff_<module>`, vues Grafana) |
 | `sql/pg_test/` | Deux scripts créant la base `poc_pg` avec des écarts volontaires (cluster 1 et cluster 2) |
+| `Deploy/` | **Les 4 archives de déploiement** (`compa_pg_depot`, `compa_pg_comparateur`, `compa_pg_grafana`, `compa_pg_clusters_test`) et leurs empreintes |
+| `packaging/` | `build_packages.sh` : construit les archives de `Deploy/` ; `test_packages.sh` ; modèles des LISEZMOI (voir `docs/deploiement_archives.md`) |
 | `infra/` | `hyperv/create_vms.ps1` : réseau et 2 VM Hyper-V (guide : `docs/installation_vm.md`) ; `pg_clusters.sh` : crée les deux clusters de test (5433/5434) sur `pgdb01` |
 | `grafana/` | 13 dashboards JSON, générateur, provisioning, tests. Voir `grafana/README.md` |
 | `docs/` | Format des CSV, liste de contrôle de première exécution |
+
+## Le dossier Deploy : archives de déploiement
+
+`Deploy/` contient **les fichiers à copier sur les machines**, prêts à l'emploi : une archive par fonction. On n'a plus besoin de cloner le dépôt sur les VM.
+
+| Archive | À installer sur | Rôle | Ordre |
+|---|---|---|---|
+| `compa_pg_depot.tgz` | la machine PostgreSQL (`pgdb01`) | PostgreSQL, base `compa`, schéma `compa_pg`, rôle Grafana lecture seule ; `declarer-instance.sh` déclare les clusters à comparer | 1 |
+| `compa_pg_clusters_test.tgz` | la même machine (POC uniquement) | 2 clusters de test (5433, 5434) avec écarts voulus : 55 écarts attendus | 2 (option) |
+| `compa_pg_comparateur.tgz` | la machine qui lance les comparaisons (`pgbastion`) | `compa_pg.sh`, 12 requêtes, `compare.py`, commande `compa_pg`, comparaison quotidienne planifiée (systemd ou cron) | 3 |
+| `compa_pg_grafana.tgz` | `pgbastion` ou une autre machine | Grafana, source de données, 13 dashboards | 4 |
+
+Chaque archive contient, à l'intérieur de son dossier :
+
+- `LISEZMOI.md` : composants à installer, SQL à exécuter, planification (systemd et cron), vérification, mise à jour, désinstallation, dépannage ;
+- `install.sh` et `verify.sh` : installation (rejouable) et contrôles ;
+- `scripts/compa_pg.env.example` : paramètres à copier en `compa_pg.env` (IP, mots de passe) ;
+- `SHA256SUMS` et `VERSION` : contrôle d'intégrité, version.
+
+Pas de `manifeste.txt` Python : `compare.py` n'utilise que la bibliothèque standard (aucun paquet pip). `Deploy/SHA256SUMS` donne les empreintes des archives.
+
+**Utilisation, sur chaque machine** (dans l'ordre du tableau) :
+
+```powershell
+# depuis Windows, après git pull
+scp Deploy\compa_pg_depot.tgz admin01@192.168.60.11:~/
+```
+
+```bash
+tar xzf compa_pg_depot.tgz && cd compa_pg_depot
+sha256sum -c SHA256SUMS --quiet                    # contrôle d'intégrité
+cp scripts/compa_pg.env.example scripts/compa_pg.env && nano scripts/compa_pg.env
+sudo ./install.sh
+sudo ./verify.sh
+```
+
+Les mots de passe de `compa_app` et de `grafana_ro` doivent être **identiques** dans les archives qui les partagent. Ensuite : `compa_pg -S PGA -D poc_pg -s PGB -d poc_pg -k`.
+
+**Régénérer les archives** (après une modification du code, des requêtes ou des dashboards) : `packaging/build_packages.sh v0.2`, puis commiter `Deploy/`. Les fichiers de `Deploy/` sont générés : ne pas les modifier à la main. Détails et tests : [`docs/deploiement_archives.md`](docs/deploiement_archives.md).
+
+> Statut : écrit le 2026-10-18, **à valider sur des VM neuves**. Testé en local : installation réelle des 4 archives suivie d'une comparaison (55 écarts).
 
 ## Mise en place
 
@@ -155,6 +198,7 @@ Les CSV de `python/tests/fixtures` sont une extraction réelle des deux clusters
 - [`docs/format_csv.md`](docs/format_csv.md) : format des CSV produits par le script et lus par `compare.py`, règles d'exclusion
 - [`docs/premiere_execution.md`](docs/premiere_execution.md) : liste de contrôle avant une première exécution sur un nouvel environnement
 - [`grafana/README.md`](grafana/README.md) : installation et utilisation des dashboards
+- [`docs/deploiement_archives.md`](docs/deploiement_archives.md) : déploiement par archives (`Deploy/`)
 
 ## Sécurité
 

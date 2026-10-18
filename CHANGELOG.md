@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2 - en cours (2026-10-18)
+
+### Déploiement par archives
+- Dossier `Deploy/` : 4 archives (`compa_pg_depot`, `compa_pg_comparateur`, `compa_pg_grafana`, `compa_pg_clusters_test`), chacune avec `install.sh`, `verify.sh`, `LISEZMOI.md` et `SHA256SUMS`. Voir `docs/deploiement_archives.md`.
+- `packaging/build_packages.sh` (archives reproductibles) et `packaging/test_packages.sh` (installation réelle des 4 archives puis comparaison : 55 écarts).
+- `infra/pg_clusters.sh` : scripts SQL lus par redirection (l'utilisateur `postgres` ne lisait pas un fichier sous `/home`) ; mot de passe via `COMPA_APP_PASSWORD`.
+
 ## 0.1 - en cours (2026-10-16)
 
 Première version de compA_pg, portage de [comparaison_ase](https://github.com/serentz/comparaison_ase) 0.1 vers PostgreSQL.

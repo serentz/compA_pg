@@ -1,0 +1,3 @@
+# Comparaisons lancees par la planification (une par ligne) : INSTANCE1 BASE1 INSTANCE2 BASE2
+# Les instances sont celles declarees dans compa_pg.config_compa_pg. Exemple :
+# PGA poc_pg PGB poc_pg
