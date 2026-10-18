@@ -26,7 +26,9 @@ TESTSQL="$HERE/../sql/pg_test"
 [ "$(id -u)" -eq 0 ] || { echo "[-] A lancer avec sudo." >&2; exit 1; }
 [ -d "/usr/lib/postgresql/$VER" ] || { echo "[-] PostgreSQL $VER absent (apt install postgresql-$VER)." >&2; exit 1; }
 
-read -r -s -p "Mot de passe du role compa_app (>= 8 caracteres) : " PW; echo
+# Mot de passe : variable COMPA_APP_PASSWORD (installation sans question), sinon saisie.
+PW="${COMPA_APP_PASSWORD:-}"
+if [ -z "$PW" ]; then read -r -s -p "Mot de passe du role compa_app (>= 8 caracteres) : " PW; echo; fi
 [ "${#PW}" -ge 8 ] || { echo "[-] Mot de passe trop court." >&2; exit 1; }
 
 make_cluster() {   # $1 nom, $2 port
@@ -61,7 +63,8 @@ SQL
 done
 
 echo "[+] Chargement des bases de test..."
-sql_as_postgres 5433 -q -f "$TESTSQL/01_create_poc_db_cluster1.sql"
-sql_as_postgres 5434 -q -f "$TESTSQL/02_create_poc_db_cluster2.sql"
+# Lecture par redirection : l'utilisateur postgres ne peut pas lire un fichier situe sous /home/<utilisateur>.
+sql_as_postgres 5433 -q < "$TESTSQL/01_create_poc_db_cluster1.sql"
+sql_as_postgres 5434 -q < "$TESTSQL/02_create_poc_db_cluster2.sql"
 pg_lsclusters
 echo "[+] Termine. Declarer ensuite les deux clusters dans compa_pg.config_compa_pg (voir README)."

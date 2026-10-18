@@ -1,0 +1,11 @@
+[Unit]
+Description=compA_pg : comparaisons planifiees, tous les jours a 02:30
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+# Rattrape un declenchement manque (machine eteinte) au demarrage suivant
+Persistent=true
+Unit=compa_pg-planifie.service
+
+[Install]
+WantedBy=timers.target

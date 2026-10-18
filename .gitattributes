@@ -12,3 +12,4 @@
 *.md   text eol=lf
 *.csv  text eol=lf
 *.png  binary
+*.tgz binary

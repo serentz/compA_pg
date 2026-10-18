@@ -1,0 +1,11 @@
+# compA_pg : equivalent cron du timer systemd compa_pg-planifie.
+# A N'UTILISER QUE si systemd ne convient pas (ne pas activer les deux).
+#
+# Installation :  sudo cp cron/compa_pg.cron /etc/cron.d/compa_pg     (remplacer RUN_USER ci-dessous par le login Linux)
+# Les comparaisons lancees sont celles de /etc/compa_pg/planifie.conf. Sortie dans le journal systeme :
+# journalctl -t compa_pg-planifie
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Tous les jours a 02:30
+30 2 * * * RUN_USER /usr/local/bin/compa_pg-planifie 2>&1 | logger -t compa_pg-planifie
